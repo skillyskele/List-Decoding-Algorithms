@@ -20,6 +20,7 @@ void test_find_LCS_Simple(void) {
     TEST_ASSERT_EQUAL_INT(3, lcs);
 }
 
+// NOT SURE ABOUT HOW TO DO THE NULL STRING CASE
 void test_find_LCS_EmptyString(void) {
     char s1[] = "";
     char s2[] = "ace";
@@ -52,9 +53,20 @@ void test_find_LCS_SubsequenceAtEnd(void) {
 void test_edit_distance_Simple(void) {
     char *S = "aceabcdey";
     int i = 0, j = 3, k = 8;
-    TEST_ASSERT_EQUAL_INT(3, edit_distance(S, i, j, k));    
+    TEST_ASSERT_EQUAL_INT(2, edit_distance(S, i, j, k));    
 }
 
+void test_edit_distance_NoCommonSubsequence(void) {
+    char *S = "abcdefy";
+    int i = 0, j = 3, k = 6;
+    TEST_ASSERT_EQUAL_INT(6, edit_distance(S, i, j, k));    
+}
+
+void test_edit_distance_IdenticalStrings(void) {
+    char *S = "abcabcy";
+    int i = 0, j = 3, k = 6;
+    TEST_ASSERT_EQUAL_INT(0, edit_distance(S, i, j, k));   
+}
 
 /**
  * Test for the synchronization string checker function
@@ -82,6 +94,8 @@ int main(void) {
     RUN_TEST(test_find_LCS_SubsequenceAtEnd);
 
     RUN_TEST(test_edit_distance_Simple);
+    RUN_TEST(test_edit_distance_NoCommonSubsequence);
+    RUN_TEST(test_edit_distance_IdenticalStrings);
 
     return UNITY_END();
 }

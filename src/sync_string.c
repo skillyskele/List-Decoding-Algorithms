@@ -85,7 +85,7 @@ int edit_distance(const char *S, int i, int j, int k) {
     int lcs = find_LCS(s1, s2);
     free(s1);
     free(s2);
-    return lcs;
+    return s1_len + s2_len - 2*lcs;
 }
 
 // however, i disagree with the statement in that i think 
