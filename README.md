@@ -19,10 +19,6 @@ We will be implementing industry-standard code to implement the decoding algorit
 
 We welcome contributions from the community to enhance this project. If you're interested in contributing, please fork this repository, make your changes, and submit a pull request. Kindly adhere to our coding guidelines and code of conduct.
 
-## License
-
-We'll get a license soon.
-
 ## Acknowledgements
 
 We extend our gratitude to [ACM](https://www.acm.org/) for their support and to the authors of the paper for their valuable contributions to the field of List Decoding Algorithms.
