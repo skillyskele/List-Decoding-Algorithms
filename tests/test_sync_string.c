@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include "../include/sync_string.h"
 #include "unity.h"
 
@@ -20,7 +21,6 @@ void test_find_LCS_Simple(void) {
     TEST_ASSERT_EQUAL_INT(3, lcs);
 }
 
-// NOT SURE ABOUT HOW TO DO THE NULL STRING CASE
 void test_find_LCS_EmptyString(void) {
     char s1[] = "";
     char s2[] = "ace";
@@ -53,7 +53,26 @@ void test_find_LCS_SubsequenceAtEnd(void) {
 void test_edit_distance_Simple(void) {
     char *S = "aceabcdey";
     int i = 0, j = 3, k = 8;
-    TEST_ASSERT_EQUAL_INT(2, edit_distance(S, i, j, k));    
+    TEST_ASSERT_EQUAL_INT(2, edit_distance(S, i, j, k));   
+}
+
+void test_edit_distance_EmptyString(void) {
+    char *S = "abcy";
+    int i=0, j=0, k=3;
+    TEST_ASSERT_EQUAL_INT(3, edit_distance(S, i, j, k));
+}
+
+// In practice, you should never compare two empty strings, since i < j < k, and string length is always at least 2
+void test_edit_distance_TwoEmptyStrings(void) {
+    char *S = "";
+    int i=0, j=0, k=0; 
+    TEST_ASSERT_EQUAL_INT(0, edit_distance(S, i, j, k));
+}
+
+void test_edit_distance_SmallestStrings(void) {
+    char *S = "jb";
+    int i=0, j=1, k=2; 
+    TEST_ASSERT_EQUAL_INT(2, edit_distance(S, i, j, k));
 }
 
 void test_edit_distance_NoCommonSubsequence(void) {
@@ -68,11 +87,50 @@ void test_edit_distance_IdenticalStrings(void) {
     TEST_ASSERT_EQUAL_INT(0, edit_distance(S, i, j, k));   
 }
 
+void test_SyncStringFailCases(void) {
+    const char* sync_string_1 = "aa";
+    const char* sync_string_2 = "aabaa";
+    const char* sync_string_3 = "abababab";
+    const char* sync_string_4 = "cccccc";
+    const char* sync_string_5 = "xyzxyzxyz";
+    
+    int n1 = 2;
+    int n2 = 5;
+    int n3 = 8;
+    int n4 = 6;
+    int n5 = 9;
+    double epsilon = .9;
+
+    TEST_ASSERT_FALSE(synchronization_string_checker(sync_string_1, n1, epsilon));
+    TEST_ASSERT_FALSE(synchronization_string_checker(sync_string_2, n2, epsilon));
+    TEST_ASSERT_FALSE(synchronization_string_checker(sync_string_3, n3, epsilon));
+    TEST_ASSERT_FALSE(synchronization_string_checker(sync_string_4, n4, epsilon));
+    TEST_ASSERT_FALSE(synchronization_string_checker(sync_string_5, n5, epsilon));
+}
+
+void test_SyncStringABA(void) {
+    const char* sync_string = "aba";
+    
+    int n = 3;
+    double epsilon1 = 0.67;
+    double epsilon2 = 0.65;
+
+    TEST_ASSERT_TRUE(synchronization_string_checker(sync_string, n, epsilon1));
+    TEST_ASSERT_FALSE(synchronization_string_checker(sync_string, n, epsilon2));
+}
+
+void test_minimum_epsilon_ABA(char *s) {    
+    int n = strlen(s);
+
+    printf("Testing with string '%s'\n", s);
+    minimum_epsilon_finder(s, n);
+}
+
 /**
  * Test for the synchronization string checker function
  */
-void test_SyncStringFunction(void) {
-    // Test synchronization strings
+void test_SyncStringTrivialCase(void) {
+    // Test synchronization strings 
     const char* sync_string_1 = "123456789x";
     const char* sync_string_2 = "abcdefghij";
 
@@ -86,16 +144,27 @@ void test_SyncStringFunction(void) {
 
 int main(void) {
     UNITY_BEGIN();
-    //RUN_TEST(test_SyncStringFunction);
-    RUN_TEST(test_find_LCS_Simple);
-    RUN_TEST(test_find_LCS_EmptyString);
-    RUN_TEST(test_find_LCS_NoCommonSubsequence);
-    RUN_TEST(test_find_LCS_IdenticalStrings);
-    RUN_TEST(test_find_LCS_SubsequenceAtEnd);
+    // RUN_TEST(test_SyncStringFunction);
+    // RUN_TEST(test_find_LCS_Simple);
+    // RUN_TEST(test_find_LCS_EmptyString);
+    // RUN_TEST(test_find_LCS_NoCommonSubsequence);
+    // RUN_TEST(test_find_LCS_IdenticalStrings);
+    // RUN_TEST(test_find_LCS_SubsequenceAtEnd);
 
-    RUN_TEST(test_edit_distance_Simple);
-    RUN_TEST(test_edit_distance_NoCommonSubsequence);
-    RUN_TEST(test_edit_distance_IdenticalStrings);
+    // RUN_TEST(test_edit_distance_Simple);
+    // RUN_TEST(test_edit_distance_EmptyString);
+    // RUN_TEST(test_edit_distance_TwoEmptyStrings);
+    // RUN_TEST(test_edit_distance_SmallestStrings);
+    // RUN_TEST(test_edit_distance_NoCommonSubsequence);
+    // RUN_TEST(test_edit_distance_IdenticalStrings);
+    //RUN_TEST(test_SyncStringFailCases);
+    // test_minimum_epsilon_ABA("aba");
+    // test_minimum_epsilon_ABA("abcdefghij");
+    // test_minimum_epsilon_ABA("123456789x");
+    // test_minimum_epsilon_ABA("nathan_and_harry");
+    test_minimum_epsilon_ABA("thisis");
 
+
+    //RUN_TEST(test_SyncStringABA);
     return UNITY_END();
 }

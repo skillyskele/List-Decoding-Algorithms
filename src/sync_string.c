@@ -18,7 +18,7 @@ int max(int a, int b) {
 * @param s1 is string 1
 * @param s1 is string 2
 */
-int find_LCS(char *s1, char *s2) {
+int find_LCS(const char *s1, const char *s2) {
     // initialize dp to be all 0
     int rows = strlen(s1) + 1;
     int cols = strlen(s2) + 1;
@@ -81,7 +81,7 @@ int edit_distance(const char *S, int i, int j, int k) {
     strncpy(s2, c1, s2_len);   
     s2[s2_len] = '\0';
 
-    
+    // printf("Here are strings: %s, %d, %s, %d\n", s1, s1_len, s2, s2_len);
     int lcs = find_LCS(s1, s2);
     free(s1);
     free(s2);
@@ -106,19 +106,25 @@ int edit_distance(const char *S, int i, int j, int k) {
  * is greater than (1 - ε) * (k - i).
  */
 bool synchronization_string_checker(const char *S, int n, double epsilon) {
+    
+    // n must be at least 2
+    if (n < 2) {
+    return false;
+    }
     // Iterate over all possible k, j, and i values
-    for (int k = 3; k <= n + 1; k++) {
-        for (int j = 2; j < k; j++) {
-            for (int i = 1; i < j; i++) {
+    // In this loop, i starts at 0, instead of 1, because in C, 0 means the first letter of a string, not 1
+    for (int k = 2; k <= n + 1; k++) {
+        for (int j = 1; j < k; j++) {
+            for (int i = 0; i < j; i++) {
                 // Calculate edit distance for one iteration
                 int ed = edit_distance(S, i, j, k);
 
-                int threshold = (1 - epsilon) * (k - i);
+                double threshold = (1 - epsilon) * (k - i);
                 // Check if the edit distance is greater than (1 - epsilon) * (k - i)
                 bool flag = ed > threshold;
                 
                 // Check to see iterations work as expected
-                printf("i: %d, j: %d, k: %d, threshold: %d\n", i, j, k, threshold);
+                printf("i: %d, j: %d, k: %d, ed: %d, threshold: %f\n", i, j, k, ed, threshold);
 
                 // If the condition is not met, return false
                 if (!flag) {
@@ -129,4 +135,58 @@ bool synchronization_string_checker(const char *S, int n, double epsilon) {
     }
     // If all conditions are met, return true
     return true;
+}
+
+
+void minimum_epsilon_finder(const char *S, int n) {
+    // n must be at least 2
+    if (n < 2) {
+        return;
+    }
+
+    // Print the table header
+    printf("i\tj\tk\tS[i, j)\t\tS[j, k)\t\ted\tk-i\tmin_epsilon\n");
+    printf("----------------------------------------------------------------------\n");
+
+    // Iterate over all possible k, j, and i values
+    for (int k = 2; k <= n; k++) {
+        for (int j = 1; j < k; j++) {
+            for (int i = 0; i < j; i++) {
+                // Calculate edit distance for one iteration
+                int ed = edit_distance(S, i, j, k);
+
+                // Calculate lengths of the substrings
+                int len_ij = j - i;
+                int len_jk = k - j;
+
+                // Dynamically allocate memory for substrings
+                char *substr_ij = (char *)malloc((len_ij + 1) * sizeof(char));
+                char *substr_jk = (char *)malloc((len_jk + 1) * sizeof(char));
+
+                // Check for allocation failure
+                if (!substr_ij || !substr_jk) {
+                    fprintf(stderr, "Memory allocation failed\n");
+                    return;
+                }
+
+                // Copy the substrings
+                strncpy(substr_ij, S + i, len_ij);
+                substr_ij[len_ij] = '\0';
+                strncpy(substr_jk, S + j, len_jk);
+                substr_jk[len_jk] = '\0';
+
+                // Calculate the minimum epsilon
+                double min_epsilon = 1.0 - ((double)ed / (k - i));
+                if (min_epsilon < 0.0) min_epsilon = 0.0;  // Ensure min_epsilon is within bounds
+                if (min_epsilon > 1.0) min_epsilon = 1.0;  // Ensure min_epsilon is within bounds
+
+                // Print the values in a formatted table
+                printf("%d\t%d\t%d\t%s\t\t%s\t\t%d\t%d\t%.10f\n", i, j, k, substr_ij, substr_jk, ed, k - i, min_epsilon);
+
+                // Free the allocated memory
+                free(substr_ij);
+                free(substr_jk);
+            }
+        }
+    }
 }
