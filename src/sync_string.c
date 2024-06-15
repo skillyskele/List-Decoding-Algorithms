@@ -195,10 +195,12 @@ void minimum_epsilon_finder(const char *S, int n) {
     }
 }
 
+
+// should append 'bot' to the smaller string
 double compute_rsd(const char *S, const char *S_prime) {
     int len_S = strlen(S);
     int len_S_prime = strlen(S_prime);
-    printf("length of S: %d length of S': %d\n", len_S, len_S_prime);
+    // printf("length of S: %d length of S': %d\n", len_S, len_S_prime);
     int max_len = (len_S > len_S_prime) ? len_S : len_S_prime;
     double max_rsd = 0.0;
 
