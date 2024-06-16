@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../include/sync_string.h"
+#include <stdbool.h>
 
 
 /*
