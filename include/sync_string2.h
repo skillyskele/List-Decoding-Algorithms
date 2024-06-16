@@ -1,10 +1,9 @@
 #ifndef SYNC_STRING_H
 #define SYNC_STRING_H
 #include <stdbool.h>
-#include "symbol_alphabet.h"
 
-int max(int a, int b);
-int find_LCS(const SymbolArray *sa1, const SymbolArray *sa2);
+
+int find_LCS(const char* s1, const char* s2);
 int edit_distance(const char *s1, int s1_len, const char *s2, int s2_len);
 bool synchronization_string_checker(const char *S, int n, double epsilon);
 void minimum_epsilon_finder(const char* S, int n);

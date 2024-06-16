@@ -11,7 +11,7 @@ void tearDown(void) {
 }
 
 void test_constructor() {
-    char* symbols[] = {"symbol1", "symbol2", "symbol3"};
+    char* symbols[] = {"1", "symbol2", "symbol3"};
     int size = 3;
     SymbolArray* s = createSymbolArray(symbols, size);
     TEST_ASSERT_NOT_NULL(s);

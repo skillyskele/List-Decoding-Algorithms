@@ -70,8 +70,8 @@ $(ODIR)/test_symbol_alphabet.o: $(TDIR)/test_symbol_alphabet.c $(TEST_SYM_DEPS)
 main: $(MAIN_OBJ)
 	$(CC) -o $@ $^ $(CFLAGS)
 
-test_sync: $(SYNC_OBJ) $(TEST_SYNC_OBJ) $(UNITY_OBJ)
-	$(CC) -o $@ $^ $(CFLAGS) $(TEST_SYNC_DEPS)
+test_sync: $(SYNC_OBJ) $(TEST_SYNC_OBJ) $(UNITY_OBJ) $(SYMBOL_OBJ)
+	$(CC) -o $@ $^ $(CFLAGS) $(TEST_SYNC_DEPS) $(TEST_SYM_DEPS)
 
 test_sym: $(SYMBOL_OBJ) $(TEST_SYM_OBJ) $(UNITY_OBJ)
 	$(CC) -o $@ $^ $(CFLAGS) $(TEST_SYM_DEPS)
