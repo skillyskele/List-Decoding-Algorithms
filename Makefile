@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-I$(IDIR) -I$(VDIR) -g
+CFLAGS=-I$(IDIR) -I$(VDIR) -g -ggdb
 IDIR=include
 SDIR=src
 TDIR=tests
@@ -82,7 +82,7 @@ memcheck_main: main
 	drmemory -batch -quiet -- ./main
 
 memcheck_test_sync: test_sync
-	drmemory -batch -quiet -- ./test_sync
+	drmemory -- ./test_sync
 
 memcheck_test_sym: test_sym
 	drmemory -batch -quiet -- ./test_sym
