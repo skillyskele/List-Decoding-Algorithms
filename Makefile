@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-I$(IDIR) -I$(VDIR)
+CFLAGS=-I$(IDIR) -I$(VDIR) -g
 IDIR=include
 SDIR=src
 TDIR=tests
@@ -47,21 +47,21 @@ $(ODIR)/unity.o: $(VDIR)/unity.c
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 # Rule for creating main.o
-$(ODIR)/main.o: $(SDIR)/main.c
+$(MAIN_OBJ): $(SDIR)/main.c
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 # Rule for creating sync_string.o
-$(ODIR)/sync_string.o: $(SDIR)/sync_string.c $(TEST_SYNC_DEPS)
+$(SYNC_OBJ): $(SDIR)/sync_string.c $(TEST_SYNC_DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 # Rule for creating test_sync_string.o
-$(ODIR)/test_sync_string.o: $(TDIR)/test_sync_string.c $(TEST_SYNC_DEPS)
+$(TEST_SYNC_OBJ): $(TDIR)/test_sync_string.c $(TEST_SYNC_DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-$(ODIR)/symbol_alphabet.o: $(SDIR)/symbol_alphabet.c $(TEST_SYM_DEPS)
+$(SYMBOL_OBJ): $(SDIR)/symbol_alphabet.c $(TEST_SYM_DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-$(ODIR)/test_symbol_alphabet.o: $(TDIR)/test_symbol_alphabet.c $(TEST_SYM_DEPS)
+$(TEST_SYM_OBJ): $(TDIR)/test_symbol_alphabet.c $(TEST_SYM_DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 # Analogous to the following:
@@ -75,6 +75,19 @@ test_sync: $(SYNC_OBJ) $(TEST_SYNC_OBJ) $(UNITY_OBJ) $(SYMBOL_OBJ)
 
 test_sym: $(SYMBOL_OBJ) $(TEST_SYM_OBJ) $(UNITY_OBJ)
 	$(CC) -o $@ $^ $(CFLAGS) $(TEST_SYM_DEPS)
+
+
+# Dr. Memory targets
+memcheck_main: main
+	drmemory -batch -quiet -- ./main
+
+memcheck_test_sync: test_sync
+	drmemory -batch -quiet -- ./test_sync
+
+memcheck_test_sym: test_sym
+	drmemory -batch -quiet -- ./test_sym
+
+
 
 .PHONY: clean
 

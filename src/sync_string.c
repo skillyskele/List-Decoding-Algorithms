@@ -54,3 +54,23 @@ int find_LCS(const SymbolArray *sa1, const SymbolArray *sa2) {
     }
     return dp[0][0];
 }
+
+int edit_distance(const SymbolArray *sa1, const SymbolArray *sa2) {
+    // edit distance is the minimum number of insertions/deletions required to transform c into c'
+    // also equal to |c|+|c'|-2*LCS(c,c')
+    // c = S[i, j)
+    // c' = S[j,k)
+    
+
+    // printf("Here are strings: %s, %d, %s, %d\n", s1, s1_len, s2, s2_len);
+    int lcs = find_LCS(sa1, sa2);
+    
+    return sa1->size + sa2->size - 2*lcs;
+}
+
+void arraycpy(char** dest, char** src, int n) {
+    for (int i = 0; i < n; i++) {
+        dest[i] = src[i];
+    }
+}
+
