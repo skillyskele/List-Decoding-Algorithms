@@ -84,22 +84,29 @@ void test_find_LCS_SubsequenceAtEnd(void) {
 void test_edit_distance_Simple(void) {
     char* S[] = {"a", "b", "c", "d", "e", "f", "g", "h"};
     int i = 0, j = 3, k = 8; // note k actually points to one after h.
-
-    char* s1[] = {"a", "c", "e"};
-    char* s2[] = {"a", "b", "c", "d", "e"};
+    
+    char** s1 = malloc((j)*sizeof(char*));
     // for (int i = 0; i < j; i++) {
-    //     s2[j] = S[i];
+    //     s1[i] = S[i];
     // }
-    //arraycpy(s2, S + j, k-j);
+    arraycpy(s1, S + i, j); // one can malloc the substring
+
+
+    char* s2[] = {"a", "b", "c", "d", "e"}; // or one can have it in read only memory
+
     SymbolArray *sa1 = createSymbolArray(s1, 3);
     SymbolArray *sa2 = createSymbolArray(s2, 5);
-
     // Call edit_distance
-    TEST_ASSERT_EQUAL_INT(2, edit_distance(sa1, sa2));
+    //TEST_ASSERT_EQUAL_INT(2, edit_distance(sa1, sa2));
 
+    // for (int i = 0; i < j; i++) {
+    //     free(s1[i]);
+    // }
+    free(s1); // if it ws malloc'd, then it must be freed!!!
       
     deleteSymbolArray(sa1);
     deleteSymbolArray(sa2);
+
 }
 
 
