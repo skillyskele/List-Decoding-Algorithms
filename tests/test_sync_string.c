@@ -15,6 +15,7 @@ void setUp(void) {
 }
 
 void tearDown(void) {
+    // free any dynamically allocated test strings
 }
 
 void test_find_LCS_Simple(void) {
@@ -175,6 +176,37 @@ void test_edit_distance_IdenticalStrings(void) {
 
 }
 
+void test_minimum_epsilon(char **s, int n) {
+    char *s1 = symbolArrayPrinter(s, n);
+    printf("Testing with string '%s'\n", s1);
+    free(s1);
+    minimum_epsilon_finder(s, n);
+}
+
+void test_symbolArrayPrinter(void) {
+    // Allocate memory for an array of 6 string pointers
+    char** s1 = malloc(6 * sizeof(char*));
+    if (!s1) {
+        fprintf(stderr, "Memory allocation failed\n");
+        return;
+    }
+
+    // Initialize each pointer to point to the string "a"
+    for (int i = 0; i < 6; i++) {
+        s1[i] = "a";
+    }
+
+    // Call symbolArrayPrinter to concatenate the symbols
+    char* s1_string = symbolArrayPrinter(s1, 6); // Ensure you pass the length of the array
+    if (s1_string) {
+        printf("%s\n", s1_string); // Output should be "aaaaaa"
+        free(s1_string); // Free the memory allocated by symbolArrayPrinter
+    }
+
+    // Free the allocated memory for the array of pointers
+    free(s1);
+}
+
 
 int main(void) {
     UNITY_BEGIN();
@@ -191,5 +223,13 @@ int main(void) {
     // RUN_TEST(test_edit_distance_SmallestStrings);
     // RUN_TEST(test_edit_distance_NoCommonSubsequence);
     // RUN_TEST(test_edit_distance_IdenticalStrings);
+    char* ABA[] = {"a", "b", "a"};
+    test_minimum_epsilon(ABA, 3);
+    // test_minimum_epsilon("abcdefghij");
+    // test_minimum_epsilon("123456789x");
+    // test_minimum_epsilon("nathan_and_harry");
+    // test_minimum_epsilon("thisis");
+
+    //test_symbolArrayPrinter();
     return UNITY_END();
 }

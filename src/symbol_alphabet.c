@@ -17,7 +17,7 @@ SymbolArray* createSymbolArray(char** symbols, int size) {
 
     for (int i = 0; i < size; ++i) {
         s->symbols[i] = symbols[i];
-        printf("from create symbol array: %s\n", s->symbols[i]);
+        // printf("from create symbol array: %s\n", s->symbols[i]);
     }
 
     s->size = size;
