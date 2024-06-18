@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-I$(IDIR) -I$(VDIR) -g -ggdb
+CFLAGS=-I$(IDIR) -I$(VDIR) -g
 IDIR=include
 SDIR=src
 TDIR=tests
@@ -75,17 +75,6 @@ test_sync: $(SYNC_OBJ) $(TEST_SYNC_OBJ) $(UNITY_OBJ) $(SYMBOL_OBJ)
 
 test_sym: $(SYMBOL_OBJ) $(TEST_SYM_OBJ) $(UNITY_OBJ)
 	$(CC) -o $@ $^ $(CFLAGS) $(TEST_SYM_DEPS)
-
-
-# Dr. Memory targets
-memcheck_main: main
-	drmemory -batch -quiet -- ./main
-
-memcheck_test_sync: test_sync
-	drmemory -- ./test_sync
-
-memcheck_test_sym: test_sym
-	drmemory -batch -quiet -- ./test_sym
 
 
 

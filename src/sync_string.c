@@ -64,6 +64,7 @@ int edit_distance(const SymbolArray *sa1, const SymbolArray *sa2) {
 
     // printf("Here are strings: %s, %d, %s, %d\n", s1, s1_len, s2, s2_len);
     int lcs = find_LCS(sa1, sa2);
+    printf("from edit_distance, the found LCS is: %d", lcs);
     
     return sa1->size + sa2->size - 2*lcs;
 }
@@ -71,6 +72,7 @@ int edit_distance(const SymbolArray *sa1, const SymbolArray *sa2) {
 void arraycpy(char** dest, char** src, int n) {
     for (int i = 0; i < n; i++) {
         dest[i] = src[i];
+        printf("from arraycpy: %s\n", src[i]);
     }
 }
 

@@ -17,7 +17,7 @@ SymbolArray* createSymbolArray(char** symbols, int size) {
 
     for (int i = 0; i < size; ++i) {
         s->symbols[i] = symbols[i];
-        printf("%s\n", s->symbols[i]);
+        printf("from create symbol array: %s\n", s->symbols[i]);
     }
 
     s->size = size;
@@ -26,9 +26,9 @@ SymbolArray* createSymbolArray(char** symbols, int size) {
 
 void deleteSymbolArray(SymbolArray* s) {
     if (s) {
-        for (int i = 0; i < s->size; i++) {
-            free(s->symbols[i]);
-        }
+        // for (int i = 0; i < s->size; i++) {
+        //     free(s->symbols[i]);
+        // }
         free(s->symbols);
         free(s);
     }
