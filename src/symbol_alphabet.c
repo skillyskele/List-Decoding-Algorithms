@@ -43,6 +43,10 @@ Alphabet* createAlphabet(char* letterbank, int capacity, char* bot) {
   
 }
 
+char** createRandomAlphabet(char * letterbank, int capacity, char* bot) {
+
+}
+
 void deleteAlphabet(Alphabet* a) {
     if (a) {
         if (a->alphabet) {

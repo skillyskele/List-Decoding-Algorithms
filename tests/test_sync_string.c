@@ -176,6 +176,20 @@ void test_edit_distance_IdenticalStrings(void) {
 
 }
 
+void test_edit_distance_RepeatedLetterStrings(void) {
+    char* s1[]  = {"a", "aa", "aaa"};
+    char* s2[] = {"aaaa", "aaaaa", "barry"};
+    SymbolArray *sa1 = createSymbolArray(s1, 3);
+    SymbolArray *sa2 = createSymbolArray(s2, 3);
+
+    TEST_ASSERT_EQUAL_INT(6, edit_distance(sa1, sa2));
+      
+    deleteSymbolArray(sa1);
+    deleteSymbolArray(sa2);
+
+}
+
+
 void test_minimum_epsilon(char **s, int n) {
     char *s1 = symbolArrayPrinter(s, n);
     printf("Testing with string '%s'\n", s1);
@@ -223,8 +237,13 @@ int main(void) {
     // RUN_TEST(test_edit_distance_SmallestStrings);
     // RUN_TEST(test_edit_distance_NoCommonSubsequence);
     // RUN_TEST(test_edit_distance_IdenticalStrings);
-    char* ABA[] = {"a", "b", "a"};
-    test_minimum_epsilon(ABA, 3);
+    RUN_TEST(test_edit_distance_RepeatedLetterStrings);
+    // char* ABA[] = {"a", "b", "a"};
+    // test_minimum_epsilon(ABA, 3);
+    char* A_AA_AAA[] = {"a", "aa", "aaa"};
+    test_minimum_epsilon(A_AA_AAA, 3);
+    char* ABC[] = {"a", "b", "c"};
+    test_minimum_epsilon(ABC, 3);
     // test_minimum_epsilon("abcdefghij");
     // test_minimum_epsilon("123456789x");
     // test_minimum_epsilon("nathan_and_harry");
