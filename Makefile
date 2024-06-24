@@ -16,6 +16,10 @@ TEST_SYNC_DEPS = $(patsubst %, $(IDIR)/%,$(_TEST_SYNC_DEPS))
 _TEST_SYM_DEPS = symbol_alphabet.h
 TEST_SYM_DEPS = $(patsubst %, $(IDIR)/%,$(_TEST_SYM_DEPS))
 
+# symbol_alphabet.h --> /include/symbol_alphabet.h
+_UTILITY_DEPS = utility.h
+UTILITY_DEPS = $(patsubst %, $(IDIR)/%,$(_UTILITY_DEPS))
+
 # Object Files
 
 # main.o --> /obj/main.o
@@ -28,6 +32,9 @@ SYNC_OBJ = $(patsubst %, $(ODIR)/%,$(_SYNC_OBJ))
 
 _SYMBOL_OBJ = symbol_alphabet.o
 SYMBOL_OBJ = $(patsubst %, $(ODIR)/%,$(_SYMBOL_OBJ))
+
+_UTILITY_OBJ = utility.o
+UTILITY_OBJ =  $(patsubst %, $(ODIR)/%,$(_UTILITY_OBJ))
 
 # test_sync_string.o --> /obj/test_sync_string.o
 _TEST_SYNC_OBJ = test_sync_string.o
@@ -64,21 +71,25 @@ $(SYMBOL_OBJ): $(SDIR)/symbol_alphabet.c $(TEST_SYM_DEPS)
 $(TEST_SYM_OBJ): $(TDIR)/test_symbol_alphabet.c $(TEST_SYM_DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
+$(UTILITY_OBJ): $(SDIR)/utility.c $(UTILITY_DEPS)
+	$(CC) -c -o $@ $< $(CFLAGS)
+
+
 # Analogous to the following:
 # main: main.o
 # 	$(CC) -o main main.o $(CFLAGS)
 main: $(MAIN_OBJ)
 	$(CC) -o $@ $^ $(CFLAGS)
 
-test_sync: $(SYNC_OBJ) $(TEST_SYNC_OBJ) $(UNITY_OBJ) $(SYMBOL_OBJ)
+test_sync: $(SYNC_OBJ) $(TEST_SYNC_OBJ) $(UNITY_OBJ) $(SYMBOL_OBJ) $(UTILITY_OBJ)
 	$(CC) -o $@ $^ $(CFLAGS) $(TEST_SYNC_DEPS) $(TEST_SYM_DEPS)
 
-test_sym: $(SYMBOL_OBJ) $(TEST_SYM_OBJ) $(UNITY_OBJ)
-	$(CC) -o $@ $^ $(CFLAGS) $(TEST_SYM_DEPS)
+test_sym: $(SYMBOL_OBJ) $(SYNC_OBJ) $(TEST_SYM_OBJ) $(UNITY_OBJ) $(UTILITY_OBJ)
+	$(CC) -o $@ $^ $(CFLAGS) $(TEST_SYM_DEPS) $(UTILITY_DEPS)
 
 
 
 .PHONY: clean
 
 clean:
-	del /Q $(ODIR)\*.o
+	rm -f ${ODIR}/*.o

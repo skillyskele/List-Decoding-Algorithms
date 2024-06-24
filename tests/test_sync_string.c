@@ -221,6 +221,28 @@ void test_symbolArrayPrinter(void) {
     free(s1);
 }
 
+void test_epsilon_sync_string_maker(void) {
+    char* a1[] = {"a", "b", "c", "d", "e"};
+    int size = 5;
+    char* bot =  "~";
+    Alphabet* alpha1 = createAlphabet(a1, 5, bot);
+    epsilon_sync_string_maker(1, 10, alpha1);
+
+    deleteAlphabet(alpha1);
+
+}
+
+void test_SyncStringABA(void) {
+    char* s[] = {"a", "b", "a"};
+
+    int n = 3;
+    double e1 = 0.67;
+    double e2 = 0.65;
+    
+    TEST_ASSERT_TRUE(synchronization_string_checker(s, n, e1));
+    TEST_ASSERT_FALSE(synchronization_string_checker(s, n, e2));
+}
+
 
 int main(void) {
     UNITY_BEGIN();
@@ -237,18 +259,21 @@ int main(void) {
     // RUN_TEST(test_edit_distance_SmallestStrings);
     // RUN_TEST(test_edit_distance_NoCommonSubsequence);
     // RUN_TEST(test_edit_distance_IdenticalStrings);
-    RUN_TEST(test_edit_distance_RepeatedLetterStrings);
-    // char* ABA[] = {"a", "b", "a"};
-    // test_minimum_epsilon(ABA, 3);
-    char* A_AA_AAA[] = {"a", "aa", "aaa"};
-    test_minimum_epsilon(A_AA_AAA, 3);
-    char* ABC[] = {"a", "b", "c"};
-    test_minimum_epsilon(ABC, 3);
-    // test_minimum_epsilon("abcdefghij");
-    // test_minimum_epsilon("123456789x");
-    // test_minimum_epsilon("nathan_and_harry");
-    // test_minimum_epsilon("thisis");
+    // RUN_TEST(test_edit_distance_RepeatedLetterStrings);
 
-    //test_symbolArrayPrinter();
+
+    // char* ABA[] = {"a", "b", "a"}; // an epsilon of 0.66 means it's got some self similarities in there.
+    // test_minimum_epsilon(ABA, 3);
+    // char* ABA[] = {"a", "b", "c", "d", "e"}; // an epsilon of 0 means this is a valid, very good sync string. no self similarities
+    // test_minimum_epsilon(ABA, 5);
+    // char* A_AA_AAA[] = {"a", "aa", "aaa"};
+    // test_minimum_epsilon(A_AA_AAA, 3);
+    // char* ABC[] = {"a", "b", "c"};
+    
+     RUN_TEST(test_SyncStringABA);
+
+    // RUN_TEST(test_epsilon_sync_string_maker);
+
+    // test_symbolArrayPrinter();
     return UNITY_END();
 }
