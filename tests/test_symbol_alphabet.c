@@ -71,7 +71,7 @@ void test_permutations() {
     char** perms = permutations(letters);
 
     int n = strlen(letters);
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < factorial(n); i++) {
         printf("%s\n", perms[i]);
         free(perms[i]); // Free each permutation string
     }
