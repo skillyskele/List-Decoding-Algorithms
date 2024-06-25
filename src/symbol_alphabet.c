@@ -125,12 +125,12 @@ char** permutations(char* letters) {
     // printf("letters: %s\n", letters);
     int n = strlen(letters);
     int totalPerms = factorial(n);
-    printf("total permutations expected in result: %d\n", totalPerms);
+    // printf("total permutations expected in result: %d\n", totalPerms);
     char** result = (char**)malloc(totalPerms * sizeof(char*));
 
     if (n == 1) {
         result[0] = strdup(letters);
-        printf("current result instant: %s\n", result[0]);
+        // printf("current result instant: %s\n", result[0]);
         return result; // gotta free it tho
     }
 
@@ -141,21 +141,23 @@ char** permutations(char* letters) {
         char** perms = permutations(temp + 1);
         
         for (int j = 0; j < factorial(n - 1); j++) { // should be for length of perms..if 1->1, 2->2, 3->6, 4->24
-            char* perm = (char*)malloc((n + 1) * sizeof(char));
-            strcpy(perm, perms[j]);
-            perm[n - 1] = *first_letter; 
-            perm[n] = '\0'; 
-            printf("current n-1: %d, index: %d, i: %d, j: %d\t appending first word and perms[j] to result: %s\n", n-1, i * (n - 1) + j, i, j, perm); //this is wrong because it writes over what i have
-            result[i*(n-1)+j] = perm; 
-            // printf("index: %d\n", index);
-            free(perm);
+            // Allocate space in result for each permutation
+            result[i*(n-1)+j] = (char*)malloc((n + 1) * sizeof(char));
+            
+            // Copy perms[j] into result[i*(n-1)+j]
+            strcpy(result[i*(n-1)+j], perms[j]);
+            
+            // Append first_letter to result[i*(n-1)+j]
+            result[i*(n-1)+j][n - 1] = *first_letter;
+            result[i*(n-1)+j][n] = '\0';
+            free(perms[j]);
         }
         free(perms); // free it in a loop later
 
         rotateRight(temp, n);
-    for (int i = 0; i < factorial(n); i++) {
-            printf("current result long: %s\n", result[i]);
-    }
+    // for (int i = 0; i < factorial(n); i++) {
+    //         printf("current result long: %s\n", result[i]);
+    // }
     }
     free(temp);
     
