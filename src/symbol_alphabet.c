@@ -152,7 +152,7 @@ char** permutations(char* letters) {
             result[i*(n-1)+j][n] = '\0';
             free(perms[j]);
         }
-        free(perms); // free it in a loop later
+        free(perms);
 
         rotateRight(temp, n);
     // for (int i = 0; i < factorial(n); i++) {
@@ -163,27 +163,6 @@ char** permutations(char* letters) {
     
     return result;
 }
-
-// char** permutations(char* letters) {
-//     // printf("letters: %s\n", letters);
-//     int n = strlen(letters);
-//     int totalPerms = factorial(n);
-//     char** result = (char**)malloc(totalPerms * sizeof(char*));
-//     int index = 0;
-
-//     char* temp = strdup(letters);
-//     for (int i = 0; i < n; i++) {
-//         char **perms = permutations(temp+1);
-//         for (int j = 0; j < factorial(n-1); j++) {
-//             result[index] = "some value"; 
-//             index++; 
-//             printf("index: %d\n", index);
-//         }
-        
-//     }
-    
-//     return result;
-// }
 
 
 // "abc" --> "a", "b", "c", "aa", "bb", "cc", "ab", "ac", "bc", "ba", "ca", "cb", "abc", "bac", "cab", "bca", "cba", "acb" ....

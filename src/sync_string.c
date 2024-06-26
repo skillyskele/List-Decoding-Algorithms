@@ -173,7 +173,7 @@ bool synchronization_string_checker(char **S, int n, double epsilon) {
     printf("----------------------------------------------------------------------\n");
 
     // Iterate over all possible k, j, and i values
-    for (int k = 2; k <= n + 1; k++) {
+    for (int k = 2; k <= n; k++) {
         for (int j = 1; j < k; j++) {
             for (int i = 0; i < j; i++) {
                 // Allocate memory and copy substrings
@@ -226,6 +226,7 @@ bool synchronization_string_checker(char **S, int n, double epsilon) {
             }
         }
     }
+
     // If all conditions are met, return true
     return true;
 }

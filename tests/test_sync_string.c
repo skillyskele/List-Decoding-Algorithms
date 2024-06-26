@@ -6,16 +6,17 @@
 #include "../include/symbol_alphabet.h"
 #include "unity.h"
 
+
 /**
  * Unity provides optional functions that will run 
  * before and after unit tests, in case additional 
  * resources need to be set up and torn down
  */
 void setUp(void) {
+    
 }
 
 void tearDown(void) {
-    // free any dynamically allocated test strings
 }
 
 void test_find_LCS_Simple(void) {
@@ -194,7 +195,8 @@ void test_minimum_epsilon(char **s, int n) {
     char *s1 = symbolArrayPrinter(s, n);
     printf("Testing with string '%s'\n", s1);
     free(s1);
-    minimum_epsilon_finder(s, n);
+    //minimum_epsilon_finder(s, n);
+    synchronization_string_checker(s, n, 0.66);
 }
 
 void test_symbolArrayPrinter(void) {
@@ -232,20 +234,26 @@ void test_epsilon_sync_string_maker(void) {
 
 }
 
-void test_SyncStringABA(void) {
-    char* s[] = {"a", "b", "a"};
 
+
+void test_SyncStringABA(void) {
+    
     int n = 3;
     double e1 = 0.67;
     double e2 = 0.65;
-    
-    TEST_ASSERT_TRUE(synchronization_string_checker(s, n, e1));
-    TEST_ASSERT_FALSE(synchronization_string_checker(s, n, e2));
+    char** ABA = malloc(3 * sizeof(char*));
+    ABA[0] = strdup("a");
+    ABA[1] = strdup("b");
+    ABA[2] = strdup("a");
+
+    TEST_ASSERT_TRUE(synchronization_string_checker(ABA, n, e1));
+    TEST_ASSERT_FALSE(synchronization_string_checker(ABA, n, e2));
 }
 
 
 int main(void) {
     UNITY_BEGIN();
+    
     
     // RUN_TEST(test_find_LCS_Simple);
     // RUN_TEST(test_find_LCS_EmptyString);
@@ -262,15 +270,43 @@ int main(void) {
     // RUN_TEST(test_edit_distance_RepeatedLetterStrings);
 
 
-    // char* ABA[] = {"a", "b", "a"}; // an epsilon of 0.66 means it's got some self similarities in there.
-    // test_minimum_epsilon(ABA, 3);
-    // char* ABA[] = {"a", "b", "c", "d", "e"}; // an epsilon of 0 means this is a valid, very good sync string. no self similarities
-    // test_minimum_epsilon(ABA, 5);
-    // char* A_AA_AAA[] = {"a", "aa", "aaa"};
+    char** ABA = malloc(3 * sizeof(char*));
+    char* ABA_strings[] = {"a", "b", "a"};
+    for (int i = 0; i < 3; i++) {
+        ABA[i] = strdup(ABA_strings[i]);
+    }
+    test_minimum_epsilon(ABA, 3);
+    for (int i = 0; i < 3; i++) {
+        free(ABA[i]);
+    }
+    free(ABA);
+
+    // char** ABCDE = malloc(5 * sizeof(char*));
+    // char* ABCDE_strings[] = {"a", "b", "c", "d", "e"};
+    // for (int i = 0; i < 5; i++) {
+    //     ABCDE[i] = strdup(ABCDE_strings[i]);
+    // }
+    // test_minimum_epsilon(ABCDE, 5);
+    // for (int i = 0; i < 5; i++) {
+    //     free(ABCDE[i]);
+    // }
+    // free(ABCDE);
+
+    // char** A_AA_AAA = malloc(3 * sizeof(char*));
+    // char* A_AA_AAA_strings[] = {"a", "aa", "aaa"};
+    // for (int i = 0; i < 3; i++) {
+    //     A_AA_AAA[i] = strdup(A_AA_AAA_strings[i]);
+    // }
     // test_minimum_epsilon(A_AA_AAA, 3);
+    // for (int i = 0; i < 3; i++) {
+    //     free(A_AA_AAA[i]);
+    // }
+    // free(A_AA_AAA);
+
     // char* ABC[] = {"a", "b", "c"};
     
-     RUN_TEST(test_SyncStringABA);
+    // RUN_TEST(test_SyncStringABA);
+   
 
     // RUN_TEST(test_epsilon_sync_string_maker);
 

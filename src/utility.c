@@ -17,14 +17,12 @@ int max(int a, int b) {
 */
 void arraycpy(char** dest, char** src, int n) {
     for (int i = 0; i < n; i++) {
-         dest[i] = strdup(src[i]); // personally, i think it's smarter to just point to the same place src is pointing to, instead of creating a copy in the heap, by using dest[i] = src[i]
-        if (dest[i] == NULL) {
-            fprintf(stderr, "Memory allocation failed for dest[%d]\n", i);
-            // Handle error or return based on your application's logic
-            return;
-        }
+        printf("copying: %s\n", src[i]);
+        dest[i] = strdup(src[i]);
     }
 }
+
+
 
 /**
 * Concatenates an array of symbol strings into a single string
