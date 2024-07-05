@@ -12,43 +12,50 @@ SymbolArray* createSymbolArray(char** symbols, int size) {
     SymbolArray* s = malloc(sizeof(SymbolArray));
     if (!s) return NULL;
 
-    s->symbols = (char**)malloc(size * sizeof(char*));
-    if (!s->symbols) {
-        free(s);
-        return NULL;
-    }
+    // s->symbols = (char**)malloc(size * sizeof(char*));
 
-    for (int i = 0; i < size; ++i) {
-        s->symbols[i] = symbols[i];
-        // printf("from create symbol array: %s\n", s->symbols[i]);
-    }
+    s->symbols = symbols;
+
+    // for (int i = 0; i < size; ++i) {
+    //     s->symbols[i] = symbols[i];
+    //     // printf("from create symbol array: %s\n", s->symbols[i]);
+    // }
 
     s->size = size;
     return s;
 }
 
-SymbolArray* createEmptySymbolArray(int size) {
+// This function creates an alphabet and a symbolarray, be sure to deallocate both
+SymbolArray* createRandomSymbolArray(Alphabet* a, int symbolArraySize) {
     SymbolArray* s = malloc(sizeof(SymbolArray));
-    if (!s) return NULL;
 
-    s->symbols = (char**)malloc(size * sizeof(char*));
-    if (!s->symbols) {
-        free(s);
-        return NULL;
+    s->size = symbolArraySize;
+    s->symbols = malloc(symbolArraySize * sizeof(char*));
+    
+    for (int i = 0; i < symbolArraySize; i++) {
+        int randomIndex = rand() % a->size;
+        s->symbols[i] = a->alphabet[randomIndex];
+        printf("createRandomSymbolArray: %s\n", s->symbols[i]);
     }
-    s->size = size;
+
     return s;
 }
 
-void deleteSymbolArray(SymbolArray* s) {
+
+void deleteRandomSymbolArray(SymbolArray* s) {
     if (s) {
-        // for (int i = 0; i < s->size; i++) {
-        //     free(s->symbols[i]);
-        // }
         free(s->symbols);
         free(s);
     }
 }
+
+
+void deleteSymbolArray(SymbolArray* s) {
+    if (s) {
+        free(s);
+    }
+}
+
 
 // cannot cover case: bbbc, or bbba, or aaa, or when the alphabet uses duplicate letters
 // implement later because it's not clear yet what kind of alphabet i want to generate
@@ -62,41 +69,13 @@ Alphabet* createAlphabet(char** alphabet, int size, char* bot) {
     Alphabet* a = malloc(sizeof(Alphabet));
     if (!a) return NULL;
 
-    a->alphabet = (char**)malloc(size * sizeof(char*));
-    if (!a->alphabet) {
-        free(a);
-        return NULL;
-    }
-
-    for (int i = 0; i < size; i++) {
-        a->alphabet[i] = alphabet[i];
-    }
+    a->alphabet = alphabet;
 
     a->size = size;
     a->bot = bot; // not malloc-ing space for bot, because I don't expect bot to take up much memory
 }
 
-// This function creates an alphabet and a symbolarray, be sure to deallocate both
-SymbolArray* createRandomSymbolArray(Alphabet* a, int symbolArraySize) {
-    SymbolArray* s = malloc(sizeof(SymbolArray));
-    if (!s) return NULL;
 
-    s->symbols = malloc(symbolArraySize * sizeof(char*));
-    if (!s->symbols) {
-        free(s);
-        return NULL;
-    }
-
-    s->size = symbolArraySize;
-
-    for (int i = 0; i < symbolArraySize; i++) {
-        int randomIndex = rand() % a->size;
-        s->symbols[i] = a->alphabet[randomIndex];
-    }
-
-    return s;
-
-}
 
 // first you call combinations, then you call permutations. 
 // "abc" --> "a", "b", "c", "ab", "ac", "bc", "ba", "ca", "cb", "abc", "bac", "cab", "bca", "cba", "acb"
@@ -173,7 +152,7 @@ char** createRandomAlphabetII(char * letterbank, int size, char* bot) {
 
 void deleteAlphabet(Alphabet* a) {
     if (a) {
-        free(a->alphabet);
+        // free(a->alphabet);
         free(a);
     }
 }

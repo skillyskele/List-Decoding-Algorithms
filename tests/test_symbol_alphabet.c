@@ -80,9 +80,9 @@ void test_permutations() {
 
 int main(void) {
     UNITY_BEGIN();
-    // RUN_TEST(test_symbol_constructor);
-    // RUN_TEST(test_alphabet_constructor);
-    // RUN_TEST(test_createRandomSymbolArray);
+    RUN_TEST(test_symbol_constructor);
+    RUN_TEST(test_alphabet_constructor);
+    RUN_TEST(test_createRandomSymbolArray);
     RUN_TEST(test_permutations);
     return UNITY_END();
 }

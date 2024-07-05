@@ -17,7 +17,7 @@ int max(int a, int b) {
 */
 void arraycpy(char** dest, char** src, int n) {
     for (int i = 0; i < n; i++) {
-        printf("copying: %s\n", src[i]);
+        // printf("copying: %s\n", src[i]);
         dest[i] = strdup(src[i]);
     }
 }
@@ -34,17 +34,13 @@ char* symbolArrayPrinter(char** s, int n) {
     // Calculate the total length needed for the resulting string
     int total_length = 0;
     for (int i = 0; i < n; i++) {
-        // printf("from symbolArrayPrinter: %s is %ld long\n", s[i], strlen(s[i]));
+        // printf("from symbolArrayPrinter: %s\n", s[i]);
         total_length += strlen(s[i]);
     }
 
     // Allocate memory for the resulting string (+1 for the null terminator)
     char* result = malloc((total_length + 1) * sizeof(char));
-    if (!result) {
-        fprintf(stderr, "Memory allocation failed\n");
-        return NULL;
-    }
-
+    
     // Concatenate the symbols into the result string
     result[0] = '\0';  // Initialize the result string with an empty string
     for (int i = 0; i < n; i++) {

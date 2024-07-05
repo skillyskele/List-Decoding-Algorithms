@@ -13,5 +13,6 @@ double minimum_epsilon_finder(char** S, int n);
 double compute_rsd(char *S, const char *S_prime);
 char* symbolArrayPrinter(char** s, int n);
 void epsilon_sync_string_maker(double epsilon, int n, Alphabet* a); 
+void deleteRandomSymbolArray(SymbolArray* s);
 
 #endif 

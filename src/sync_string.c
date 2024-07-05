@@ -16,15 +16,44 @@
 * @return Length of the longest common subsequence
 */
 int find_LCS(const SymbolArray *sa1, const SymbolArray *sa2) {
-    // initialize dp to be all 0
     int rows = sa1->size + 1;
     int cols = sa2->size + 1;
     int dp[rows][cols];
-    memset(dp, 0, sizeof(dp));
+    memset(dp, 0, sizeof(dp)); 
+    // printf("yo here are rows and cols: %d, %d\n", rows, cols);
 
     for (int i = rows - 2; i >= 0; i--) {
         for (int j = cols - 2; j >= 0; j--) {
-            if (sa1->symbols[i] == sa2->symbols[j]) {
+            // printf("comparing s1 and s2: %s, %s\n", sa1->symbols[i], sa2->symbols[j]);
+            if (strcmp(sa1->symbols[i], sa2->symbols[j])==0) { //should be strcmp, comparing pointers, not memory
+                // printf("here!\n");
+                dp[i][j] = 1 + dp[i+1][j+1];
+            } else {
+                dp[i][j] = max(dp[i][j+1], dp[i+1][j]);
+            }
+        }
+    }
+    return dp[0][0];
+}
+
+/**
+* Finds the longest common subsequence between two SymbolArrays
+* @param sa1 First SymbolArray
+* @param sa2 Second SymbolArray
+* @return Length of the longest common subsequence
+*/
+int find_LCS2(const SymbolArray *sa1, const SymbolArray *sa2) {
+    int rows = sa1->size + 1;
+    int cols = sa2->size + 1;
+    int dp[rows][cols];
+    memset(dp, 0, sizeof(dp)); 
+    // printf("yo here are rows and cols: %d, %d\n", rows, cols);
+
+    for (int i = rows - 2; i >= 0; i--) {
+        for (int j = cols - 2; j >= 0; j--) {
+            printf("comparing s1 and s2: %s, %s\n", sa1->symbols[i], sa2->symbols[j]);
+            if (strcmp(sa1->symbols[i], sa2->symbols[j])==0) { //should be strcmp, comparing pointers, not memory
+                printf("here!\n");
                 dp[i][j] = 1 + dp[i+1][j+1];
             } else {
                 dp[i][j] = max(dp[i][j+1], dp[i+1][j]);
@@ -53,7 +82,7 @@ int edit_distance(const SymbolArray *sa1, const SymbolArray *sa2) {
 */
 void epsilon_sync_string_maker(double epsilon, int n, Alphabet* a) {
     // make the string
-    SymbolArray* s = createRandomSymbolArray(a, n); 
+    SymbolArray* s = createRandomSymbolArray(a, n); // s->symbols just points to the SAME place as a->alphabet[randomIndex]
 
     char *str = symbolArrayPrinter(s->symbols, s->size);
     printf("Here's the random symbolarray: %s\n", str);
@@ -64,25 +93,25 @@ void epsilon_sync_string_maker(double epsilon, int n, Alphabet* a) {
     for (int len = 1; len <= n; len++) {
         for (int i = 0; i <= n - len; i++) {
             int j = i + len - 1;
-            //char* substring = (char**)malloc(sizeof(char*)*(j-i+1)); 
             int strlen = j-i+1;
-            char* substring[strlen];
-            char *substring_str = symbolArrayPrinter(substring, strlen);
+            char** substring = (char**)malloc(sizeof(char*)*(strlen)); 
             for (int k = i; k <= j; k++) {
                 substring[k-i] = s->symbols[k]; 
             }
             bool valid_sync_str =  synchronization_string_checker(substring, strlen, epsilon);
+            char *substring_str = symbolArrayPrinter(substring, strlen);
+            printf("substring under test: %s and its length: %d\n", substring_str, strlen);
             printf("%s sync string or not? %d\n", substring_str, valid_sync_str);
-            printf("\n");
             free(substring_str);
-            if (!valid_sync_str) {
-                // do stuff
-            }
+            free(substring);
+            // if (!valid_sync_str) {
+            //     // do stuff
+            // }
 
         }
     }
-    deleteSymbolArray(s);
     free(str);
+    deleteRandomSymbolArray(s);
 }
 
 
@@ -165,6 +194,7 @@ double minimum_epsilon_finder(char** S, int n) {
 bool synchronization_string_checker(char **S, int n, double epsilon) {
     // n must be at least 2
     if (n < 2) {
+        printf("just retuned false since n < 2!\n");
         return false;
     }
 
