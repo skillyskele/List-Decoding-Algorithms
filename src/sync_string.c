@@ -77,42 +77,69 @@ int edit_distance(const SymbolArray *sa1, const SymbolArray *sa2) {
 /**
 * Generates epsilon-sync strings from a SymbolArray
 * @param epsilon Epsilon value
-* @param n Size of the SymbolArray
+* @param n Size of the SymbolArray...it's how long we want the symbolarray to turn out
 * @param a Alphabet used for generating SymbolArray
 */
 void epsilon_sync_string_maker(double epsilon, int n, Alphabet* a) {
     // make the string
     SymbolArray* s = createRandomSymbolArray(a, n); // s->symbols just points to the SAME place as a->alphabet[randomIndex]
-
-    char *str = symbolArrayPrinter(s->symbols, s->size);
-    printf("Here's the random symbolarray: %s\n", str);
+    char *str1 = symbolArrayPrinter(s->symbols, s->size);
+    printf("Here's the random symbolarray: %s\n", str1);
     
     // check every substring inside s
     // if that substring doesn't pass, we'll call epsilon_sync_string_maker on that substring
     // for now, just output every substring inside s
-    for (int len = 1; len <= n; len++) {
-        for (int i = 0; i <= n - len; i++) {
-            int j = i + len - 1;
-            int strlen = j-i+1;
-            char** substring = (char**)malloc(sizeof(char*)*(strlen)); 
-            for (int k = i; k <= j; k++) {
-                substring[k-i] = s->symbols[k]; 
-            }
-            bool valid_sync_str =  synchronization_string_checker(substring, strlen, epsilon);
-            char *substring_str = symbolArrayPrinter(substring, strlen);
-            printf("substring under test: %s and its length: %d\n", substring_str, strlen);
-            printf("%s sync string or not? %d\n", substring_str, valid_sync_str);
-            free(substring_str);
-            free(substring);
-            // if (!valid_sync_str) {
-            //     // do stuff
-            // }
 
-        }
-    }
-    free(str);
+    char** valid_str = random_sampling(s->symbols, s->size, a, epsilon);
+    char *str2 = symbolArrayPrinter(valid_str, s->size);
+    printf("Here's the corrected symbolarray: %s\n", str2);
+
+   
+    free(str1);
+    free(str2);
     deleteRandomSymbolArray(s);
+    // return valid_str;
 }
+
+char** random_sampling(char** s, int n, Alphabet* a, double epsilon) {
+    bool replacement_made;
+    do {
+        replacement_made = false;
+        for (int len = 1; len <= n; len++) {
+            for (int i = 0; i <= n - len; i++) {
+                int j = i + len - 1;
+                int strlen = j - i + 1;
+                char** substring = s + i;
+                bool valid_sync_str = synchronization_string_checker(substring, strlen, epsilon);
+                char *substring_str = symbolArrayPrinter(substring, strlen);
+                printf("substring under test: %s and its length: %d\n", substring_str, strlen);
+                printf("%s sync string or not? %d\n", substring_str, valid_sync_str);
+                free(substring_str);
+                if (!valid_sync_str) {
+                    char** new_str = random_string(a, strlen);
+                    char* temp = symbolArrayPrinter(new_str, strlen);
+                    printf("new random string: %s, %d long\n", temp, strlen);
+                    free(temp);
+                    // strlen slots from s+i onward get replaced by this random string
+                    for (int k = 0; k < strlen; k++) { //remember, s is in the heap
+                        s[k + i] = new_str[k];
+                    }
+                    char* t = symbolArrayPrinter(s, n);
+                    printf("replaced string: %s, %d long\n", t, strlen);
+                    free(t);
+                    free(new_str);
+                    replacement_made = true;
+                    break;
+                }
+            }
+            if (replacement_made) {
+                break;
+            }
+        }
+    } while (replacement_made);
+    return s; //or maybe return like, "final_s"
+}
+
 
 
 
@@ -194,8 +221,8 @@ double minimum_epsilon_finder(char** S, int n) {
 bool synchronization_string_checker(char **S, int n, double epsilon) {
     // n must be at least 2
     if (n < 2) {
-        printf("just retuned false since n < 2!\n");
-        return false;
+        printf("just retuned true since n < 2!\n");
+        return true;
     }
 
     // Print the table header

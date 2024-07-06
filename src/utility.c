@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "../include/symbol_alphabet.h"
 
 /*
 * Finds the maximum integer between two integers
@@ -20,6 +21,19 @@ void arraycpy(char** dest, char** src, int n) {
         // printf("copying: %s\n", src[i]);
         dest[i] = strdup(src[i]);
     }
+}
+
+char** random_string(Alphabet* a, int arraySize) {
+    char** randomStrings = malloc(arraySize * sizeof(char*));
+    if (!randomStrings) return NULL;
+
+    for (int i = 0; i < arraySize; i++) {
+        int randomIndex = rand() % a->size;
+        randomStrings[i] = a->alphabet[randomIndex];
+        // printf("random_string: %s\n", randomStrings[i]);
+    }
+
+    return randomStrings;
 }
 
 

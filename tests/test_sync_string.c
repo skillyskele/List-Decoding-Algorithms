@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include "../include/sync_string.h"
 #include "../include/symbol_alphabet.h"
+#include "../include/utility.h"
 #include "unity.h"
 
 
@@ -304,10 +305,26 @@ void test_epsilon_sync_string_maker(void) {
 
 }
 
-//skillyskele <-- github
-//nathan kim <-- linkedin
-//ksotillo <-- github 
+void test_random_sampling(void) {
+    char** a1 = malloc(4 * sizeof(char*));
+    a1[0] = strdup("a");
+    a1[1] = strdup("b");
+    a1[2] = strdup("c"); 
+    a1[3] = strdup("d");
+    char* bot =  "~";
+    Alphabet* alpha1 = createAlphabet(a1, 4, bot);
 
+    char* s[] = {"a", "b", "b", "c"};
+    random_sampling(s, 4, alpha1, 1);
+
+    deleteAlphabet(alpha1);
+    for (int i = 0; i < 4; i++) {
+        free(a1[i]);
+    }
+    free(a1);
+
+    
+}
 
 
 void test_SyncStringABA(void) {
@@ -360,24 +377,14 @@ int main(void) {
     //     free(ABCDE[i]);
     // }
     // free(ABCDE);
-
-    // char** A_AA_AAA = malloc(3 * sizeof(char*));
-    // char* A_AA_AAA_strings[] = {"a", "aa", "aaa"};
-    // for (int i = 0; i < 3; i++) {
-    //     A_AA_AAA[i] = strdup(A_AA_AAA_strings[i]);
-    // }
-    // test_minimum_epsilon(A_AA_AAA, 3);
-    // for (int i = 0; i < 3; i++) {
-    //     free(A_AA_AAA[i]);
-    // }
-    // free(A_AA_AAA);
-
-    // char* ABC[] = {"a", "b", "c"};
     
     // RUN_TEST(test_SyncStringABA);
    
 
-    RUN_TEST(test_epsilon_sync_string_maker);
+    //RUN_TEST(test_epsilon_sync_string_maker);
+
+    RUN_TEST(test_random_sampling);
+
 
     // test_symbolArrayPrinter();
     return UNITY_END();
