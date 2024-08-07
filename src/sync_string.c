@@ -37,33 +37,6 @@ int find_LCS(const SymbolArray *sa1, const SymbolArray *sa2) {
 }
 
 /**
-* Finds the longest common subsequence between two SymbolArrays
-* @param sa1 First SymbolArray
-* @param sa2 Second SymbolArray
-* @return Length of the longest common subsequence
-*/
-int find_LCS2(const SymbolArray *sa1, const SymbolArray *sa2) {
-    int rows = sa1->size + 1;
-    int cols = sa2->size + 1;
-    int dp[rows][cols];
-    memset(dp, 0, sizeof(dp)); 
-    // printf("yo here are rows and cols: %d, %d\n", rows, cols);
-
-    for (int i = rows - 2; i >= 0; i--) {
-        for (int j = cols - 2; j >= 0; j--) {
-            printf("comparing s1 and s2: %s, %s\n", sa1->symbols[i], sa2->symbols[j]);
-            if (strcmp(sa1->symbols[i], sa2->symbols[j])==0) { //should be strcmp, comparing pointers, not memory
-                printf("here!\n");
-                dp[i][j] = 1 + dp[i+1][j+1];
-            } else {
-                dp[i][j] = max(dp[i][j+1], dp[i+1][j]);
-            }
-        }
-    }
-    return dp[0][0];
-}
-
-/**
 * Calculates the edit distance between two SymbolArrays
 * @param sa1 First SymbolArray
 * @param sa2 Second SymbolArray
@@ -75,32 +48,11 @@ int edit_distance(const SymbolArray *sa1, const SymbolArray *sa2) {
 }
 
 /**
-* Generates epsilon-sync strings from a SymbolArray
-* @param epsilon Epsilon value
-* @param n Size of the SymbolArray...it's how long we want the symbolarray to turn out
-* @param a Alphabet used for generating SymbolArray
+* corrects a string into a valid epsilon-sync strings by replacing invalid substrings with randomly generated substrings until the whole thing works
+* @param epsilon desired epsilon value
+* @param n size of the desired sync string
+* @param a Alphabet used for generating sync string
 */
-void epsilon_sync_string_maker(double epsilon, int n, Alphabet* a) {
-    // make the string
-    SymbolArray* s = createRandomSymbolArray(a, n); // s->symbols just points to the SAME place as a->alphabet[randomIndex]
-    char *str1 = symbolArrayPrinter(s->symbols, s->size);
-    printf("Here's the random symbolarray: %s\n", str1);
-    
-    // check every substring inside s
-    // if that substring doesn't pass, we'll call epsilon_sync_string_maker on that substring
-    // for now, just output every substring inside s
-
-    char** valid_str = random_sampling(s->symbols, s->size, a, epsilon);
-    char *str2 = symbolArrayPrinter(valid_str, s->size);
-    printf("Here's the corrected symbolarray: %s\n", str2);
-
-   
-    free(str1);
-    free(str2);
-    deleteRandomSymbolArray(s);
-    // return valid_str;
-}
-
 char** random_sampling(char** s, int n, Alphabet* a, double epsilon) {
     bool replacement_made;
     do {
@@ -164,18 +116,13 @@ double minimum_epsilon_finder(char** S, int n) {
         for (int j = 1; j < k; j++) {
             for (int i = 0; i < j; i++) {
 
-                // Allocate memory and copy substrings
-                char** s1 = malloc((j - i) * sizeof(char*));
-                char** s2 = malloc((k - j) * sizeof(char*));
-                if (!s1 || !s2) {
-                    fprintf(stderr, "Memory allocation failed\n");
-                    return;
-                }
-                arraycpy(s1, S + i, j - i);
-                arraycpy(s2, S + j, k - j);
+                char **s1 = S + i;
+                char **s2 = S + j;
+                int len1 = j - i;
+                int len2 = k - j;
 
-                SymbolArray *sa1 = createSymbolArray(s1, j - i);
-                SymbolArray *sa2 = createSymbolArray(s2, k - j);
+                SymbolArray *sa1 = createSymbolArray(s1, len1);
+                SymbolArray *sa2 = createSymbolArray(s2, len2);
 
                 // Calculate edit distance for one iteration
                 int ed = edit_distance(sa1, sa2);
@@ -189,8 +136,8 @@ double minimum_epsilon_finder(char** S, int n) {
                     min_epsilon = epsilon;
                 }
                 
-                char *s1_str = symbolArrayPrinter(s1, j - i);
-                char *s2_str = symbolArrayPrinter(s2, k - j);
+                char *s1_str = symbolArrayPrinter(s1, len1);
+                char *s2_str = symbolArrayPrinter(s2, len2);
 
                 // Print the values in a formatted table
                 printf("%d\t%d\t%d\t%s\t\t%s\t\t%d\t%d\t%.10f\n", i, j, k, 
@@ -202,14 +149,6 @@ double minimum_epsilon_finder(char** S, int n) {
                 deleteSymbolArray(sa2);
                 free(s1_str);
                 free(s2_str);
-                for (int idx = 0; idx < (j - i); idx++) {
-                    free(s1[idx]);
-                }
-                for (int idx = 0; idx < (k - j); idx++) {
-                    free(s2[idx]);
-                }
-                free(s1);
-                free(s2);
             }
         }
     }
@@ -233,18 +172,16 @@ bool synchronization_string_checker(char **S, int n, double epsilon) {
     for (int k = 2; k <= n; k++) {
         for (int j = 1; j < k; j++) {
             for (int i = 0; i < j; i++) {
-                // Allocate memory and copy substrings
-                char** s1 = malloc((j - i) * sizeof(char*));
-                char** s2 = malloc((k - j) * sizeof(char*));
-                if (!s1 || !s2) {
-                    fprintf(stderr, "Memory allocation failed\n");
-                    return false;
-                }
-                arraycpy(s1, S + i, j - i);
-                arraycpy(s2, S + j, k - j);
+                char **s1 = S + i;
+                char **s2 = S + j;
+                int len1 = j - i;
+                int len2 = k - j;
 
-                SymbolArray *sa1 = createSymbolArray(s1, j - i);
-                SymbolArray *sa2 = createSymbolArray(s2, k - j);
+                // to be honest, we don't need to createSymbolArray, 
+                // we should just pass s1 and s2 directly into 
+
+                SymbolArray *sa1 = createSymbolArray(s1, len1);
+                SymbolArray *sa2 = createSymbolArray(s2, len2);
 
                 // Calculate edit distance for one iteration
                 int ed = edit_distance(sa1, sa2);
@@ -255,8 +192,8 @@ bool synchronization_string_checker(char **S, int n, double epsilon) {
                 // Check if the edit distance is greater than (1 - epsilon) * (k - i)
                 bool flag = ed > threshold;
 
-                char *s1_str = symbolArrayPrinter(s1, j - i);
-                char *s2_str = symbolArrayPrinter(s2, k - j);
+                char *s1_str = symbolArrayPrinter(s1, len1);
+                char *s2_str = symbolArrayPrinter(s2, len2);
 
                 // Print the values in a formatted table
                 printf("%d\t%d\t%d\t%s\t\t%s\t\t%d\t%.10f\t%s\n", i, j, k, 
@@ -267,14 +204,6 @@ bool synchronization_string_checker(char **S, int n, double epsilon) {
                 deleteSymbolArray(sa2);
                 free(s1_str);
                 free(s2_str);
-                for (int idx = 0; idx < (j - i); idx++) {
-                    free(s1[idx]);
-                }
-                for (int idx = 0; idx < (k - j); idx++) {
-                    free(s2[idx]);
-                }
-                free(s1);
-                free(s2);
 
                 // If the condition is not met, return false
                 if (!flag) {

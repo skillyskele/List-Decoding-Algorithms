@@ -38,6 +38,7 @@ char** random_string(Alphabet* a, int arraySize) {
 
 
 
+
 /**
 * Concatenates an array of symbol strings into a single string
 * @param s Array of symbol strings

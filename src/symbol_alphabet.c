@@ -30,7 +30,7 @@ SymbolArray* createRandomSymbolArray(Alphabet* a, int symbolArraySize) {
     SymbolArray* s = malloc(sizeof(SymbolArray));
 
     s->size = symbolArraySize;
-    s->symbols = malloc(symbolArraySize * sizeof(char*));
+    s->symbols = malloc(symbolArraySize * sizeof(char*)); //no need to malloc, just say s->symbols points to a->alphabet[0]...
     
     for (int i = 0; i < symbolArraySize; i++) {
         int randomIndex = rand() % a->size;
