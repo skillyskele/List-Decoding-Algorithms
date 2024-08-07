@@ -64,20 +64,20 @@ char** random_sampling(char** s, int n, Alphabet* a, double epsilon) {
                 char** substring = s + i;
                 bool valid_sync_str = synchronization_string_checker(substring, strlen, epsilon);
                 char *substring_str = symbolArrayPrinter(substring, strlen);
-                printf("substring under test: %s and its length: %d\n", substring_str, strlen);
-                printf("%s sync string or not? %d\n", substring_str, valid_sync_str);
+                // printf("substring under test: %s and its length: %d\n", substring_str, strlen);
+                // printf("%s sync string or not? %d\n", substring_str, valid_sync_str);
                 free(substring_str);
                 if (!valid_sync_str) {
                     char** new_str = random_string(a, strlen);
                     char* temp = symbolArrayPrinter(new_str, strlen);
-                    printf("new random string: %s, %d long\n", temp, strlen);
+                    // printf("new random string: %s, %d long\n", temp, strlen);
                     free(temp);
                     // strlen slots from s+i onward get replaced by this random string
                     for (int k = 0; k < strlen; k++) { //remember, s is in the heap
                         s[k + i] = new_str[k];
                     }
                     char* t = symbolArrayPrinter(s, n);
-                    printf("replaced string: %s, %d long\n", t, strlen);
+                    // printf("replaced string: %s, %d long\n", t, strlen);
                     free(t);
                     free(new_str);
                     replacement_made = true;
@@ -160,13 +160,13 @@ double minimum_epsilon_finder(char** S, int n) {
 bool synchronization_string_checker(char **S, int n, double epsilon) {
     // n must be at least 2
     if (n < 2) {
-        printf("just retuned true since n < 2!\n");
+        // printf("just retuned true since n < 2!\n");
         return true;
     }
 
     // Print the table header
-    printf("i\tj\tk\tS[i, j)\t\tS[j, k)\t\ted\tthreshold\tflag\n");
-    printf("----------------------------------------------------------------------\n");
+    // printf("i\tj\tk\tS[i, j)\t\tS[j, k)\t\ted\tthreshold\tflag\n");
+    // printf("----------------------------------------------------------------------\n");
 
     // Iterate over all possible k, j, and i values
     for (int k = 2; k <= n; k++) {
@@ -196,8 +196,8 @@ bool synchronization_string_checker(char **S, int n, double epsilon) {
                 char *s2_str = symbolArrayPrinter(s2, len2);
 
                 // Print the values in a formatted table
-                printf("%d\t%d\t%d\t%s\t\t%s\t\t%d\t%.10f\t%s\n", i, j, k, 
-                    s1_str, s2_str, ed, threshold, flag ? "true" : "false");
+                // printf("%d\t%d\t%d\t%s\t\t%s\t\t%d\t%.10f\t%s\n", i, j, k, 
+                //     s1_str, s2_str, ed, threshold, flag ? "true" : "false");
 
                 // Free allocated memory
                 deleteSymbolArray(sa1);

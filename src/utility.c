@@ -23,6 +23,8 @@ void arraycpy(char** dest, char** src, int n) {
     }
 }
 
+
+// randomly make a sync string of specified length, given an alphabet
 char** random_string(Alphabet* a, int arraySize) {
     char** randomStrings = malloc(arraySize * sizeof(char*));
     if (!randomStrings) return NULL;

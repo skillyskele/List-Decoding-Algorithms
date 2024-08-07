@@ -174,7 +174,7 @@ char** createRandomAlphabet(char* letterbank, int size) {
         // Add elements to the alphabet until capacity is reached
         for (int j = 0; j < permCount && alphabet_size < size; j++) {
             alphabet[alphabet_size] = strdup(temp[j]);
-            printf("here's alphabet size right now, and then the given size: %d, %d, %s\n", alphabet_size, size, alphabet[alphabet_size]);
+            // printf("here's alphabet size right now, and then the given size: %d, %d, %s\n", alphabet_size, size, alphabet[alphabet_size]);
             alphabet_size++;
         }
         

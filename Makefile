@@ -43,6 +43,9 @@ TEST_SYNC_OBJ = $(patsubst %, $(ODIR)/%,$(_TEST_SYNC_OBJ))
 _TEST_SYM_OBJ = test_symbol_alphabet.o
 TEST_SYM_OBJ = $(patsubst %, $(ODIR)/%,$(_TEST_SYM_OBJ))
 
+_BENCHMARKING_OBJ = benchmarking.o
+BENCHMARKING_OBJ = $(patsubst %, $(ODIR)/%, $(_BENCHMARKING_OBJ))
+
 UNITY_SRC = $(VDIR)/unity.c
 UNITY_OBJ = $(ODIR)/unity.o
 
@@ -74,6 +77,10 @@ $(TEST_SYM_OBJ): $(TDIR)/test_symbol_alphabet.c $(TEST_SYM_DEPS)
 $(UTILITY_OBJ): $(SDIR)/utility.c $(UTILITY_DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
+# benchmarking doensn't have a header file yet...
+$(BENCHMARKING_OBJ): $(SDIR)/benchmarking.c
+	$(CC) -c -o $@ $< $(CFLAGS)
+
 
 # Analogous to the following:
 # main: main.o
@@ -87,7 +94,8 @@ test_sync: $(SYNC_OBJ) $(TEST_SYNC_OBJ) $(UNITY_OBJ) $(SYMBOL_OBJ) $(UTILITY_OBJ
 test_sym: $(SYMBOL_OBJ) $(SYNC_OBJ) $(TEST_SYM_OBJ) $(UNITY_OBJ) $(UTILITY_OBJ)
 	$(CC) -o $@ $^ $(CFLAGS) $(TEST_SYM_DEPS) $(UTILITY_DEPS)
 
-
+benchmarking:  $(SYMBOL_OBJ) $(SYNC_OBJ) $(BENCHMARKING_OBJ) $(UTILITY_OBJ)
+	$(CC) -o $@ $^ $(CFLAGS) $(UTILITY_DEPS)
 
 .PHONY: clean
 
