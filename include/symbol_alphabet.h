@@ -27,6 +27,11 @@ SymbolArray* createEmptySymbolArray(int size);
 
 char** permutations(char* letters);
 
+char** generateSubsets(char *str, int *count);
 
+
+unsigned long long factorial(int n);
+
+char** createRandomAlphabet(char* letterbank, int size);
 
 #endif // SYMBOL_ALPHABET_H

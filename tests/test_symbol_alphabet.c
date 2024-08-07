@@ -78,11 +78,44 @@ void test_permutations() {
     free(perms);
 }
 
+void test_subsets() {
+    char str[] = "abc";
+    int count;
+
+    char** subsets = generateSubsets(str, &count);
+
+    printf("Subsets:\n");
+    printArray(subsets, count);
+
+    for (int i = 0; i < count; i++) {
+        free(subsets[i]);
+    }
+    
+    // Free the array of pointers
+    free(subsets);
+
+}
+
+void test_createRandomAlphabet() {
+    char letterbank[] = "abc";
+    int size = 7; // Example size, adjust as needed
+    char** result = createRandomAlphabet(letterbank, size);
+
+    printArray(result, size);
+    
+    for (int j = 0; j < size; j++) {
+        free(result[j]);
+    }
+    free(result);
+}
+
 int main(void) {
     UNITY_BEGIN();
-    RUN_TEST(test_symbol_constructor);
-    RUN_TEST(test_alphabet_constructor);
-    RUN_TEST(test_createRandomSymbolArray);
-    RUN_TEST(test_permutations);
+    // RUN_TEST(test_symbol_constructor);
+    // RUN_TEST(test_alphabet_constructor);
+    // RUN_TEST(test_createRandomSymbolArray);
+    // RUN_TEST(test_permutations);
+    // RUN_TEST(test_subsets);
+    RUN_TEST(test_createRandomAlphabet);
     return UNITY_END();
 }

@@ -4,6 +4,12 @@
 #include "../include/symbol_alphabet.h"
 #include "../include/utility.h"
 
+void sampling(int ss_size, a_size, int num_strings) {
+    
+    while (num_strings != 0) {
+
+    }
+}
 
 
 int main() {

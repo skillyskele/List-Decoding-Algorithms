@@ -77,20 +77,6 @@ Alphabet* createAlphabet(char** alphabet, int size, char* bot) {
 
 
 
-// first you call combinations, then you call permutations. 
-// "abc" --> "a", "b", "c", "ab", "ac", "bc", "ba", "ca", "cb", "abc", "bac", "cab", "bca", "cba", "acb"
-char** createRandomAlphabetI(char* letterbank, int size, char* bot) { // go thru every substring, like a, b, c, ab, bc, abc,  and then call permutation on it? wrong. it's not able to do "ac" and "ca"
-    char* temp;
-    char** alphabet;
-    for (int i =  0; i < strlen(letterbank); i++) {
-        // loop thru abc, strcat to temp and add temp to the growing alphabet
-    }
-
-}
-
-char** combinations(char* letterbank) {
-    int n = strlen(letterbank);
-}
 
 unsigned long long factorial(int n) {
     unsigned long long result = 1;
@@ -100,6 +86,7 @@ unsigned long long factorial(int n) {
     return result;
 }
 
+// given abc, return cba bca bac abc acb cab
 char** permutations(char* letters) {
     // printf("letters: %s\n", letters);
     int n = strlen(letters);
@@ -143,12 +130,68 @@ char** permutations(char* letters) {
     return result;
 }
 
+//
+char** generateSubsets(char *str, int *count) { 
+    int n = strlen(str);
+    int totalSubsets = 1 << n; // 2^n
+    char **subsets = malloc(totalSubsets * sizeof(char *));
+    *count = 0;
+
+    for (int i = 1; i < totalSubsets; i++) { // Start from 1 to skip the empty subset
+        char *subset = malloc((n + 1) * sizeof(char));
+        int pos = 0;
+        for (int j = 0; j < n; j++) {
+            if (i & (1 << j)) {
+                subset[pos++] = str[j];
+            }
+        }
+        subset[pos] = '\0';
+        subsets[(*count)++] = subset;
+    }
+    return subsets;
+}
+
 
 // "abc" --> "a", "b", "c", "aa", "bb", "cc", "ab", "ac", "bc", "ba", "ca", "cb", "abc", "bac", "cab", "bca", "cba", "acb" ....
-char** createRandomAlphabetII(char * letterbank, int size, char* bot) {
-    //
+char** createRandomAlphabet(char* letterbank, int size) {
+    int count;
+    char** subsets = generateSubsets(letterbank, &count);
+    int alphabet_size = 0;
 
+    // Allocate memory for the alphabet array
+    char** alphabet = malloc(size * sizeof(char*));
+    if (alphabet == NULL) {
+        // Handle memory allocation failure
+        perror("Failed to allocate memory for alphabet");
+        return NULL;
+    }
+
+    for (int i = 0; i < count && alphabet_size < size; i++) {
+        int n = strlen(subsets[i]);
+        int permCount = factorial(n);
+        char** temp = permutations(subsets[i]);
+
+        // Add elements to the alphabet until capacity is reached
+        for (int j = 0; j < permCount && alphabet_size < size; j++) {
+            alphabet[alphabet_size] = strdup(temp[j]);
+            printf("here's alphabet size right now, and then the given size: %d, %d, %s\n", alphabet_size, size, alphabet[alphabet_size]);
+            alphabet_size++;
+        }
+        
+        for (int j = 0; j < permCount; j++) {
+            free(temp[j]);
+        }
+        free(temp);
+    }
+
+    for (int i = 0; i < count; i++) {
+        free(subsets[i]);
+    }
+    free(subsets);
+
+    return alphabet;
 }
+
 
 void deleteAlphabet(Alphabet* a) {
     if (a) {

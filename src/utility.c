@@ -65,6 +65,12 @@ char* symbolArrayPrinter(char** s, int n) {
     return result;
 }
 
+void printArray(char **arr, int size) {
+    for (int i = 0; i < size; i++) {
+        printf("%s\n", arr[i]);
+    }
+}
+
 
 void rotateRight(char* str, int len) {
     char temp = str[len - 1];
