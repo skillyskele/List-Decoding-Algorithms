@@ -11,7 +11,7 @@ void sampling(int ss_size, int a_size, int num_strings) {
     // Timing the Alphabet Creation
     clock_gettime(CLOCK_MONOTONIC, &start);
     char** alphabet = createRandomAlphabet("abcdefghijklmnop", a_size);
-    Alphabet* a = createAlphabet(alphabet, a_size, "*");
+    Alphabet* a = createAlphabet(alphabet, a_size, "*"); 
     clock_gettime(CLOCK_MONOTONIC, &end);
     elapsed_alphabet = (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec) / 1e9;
 
@@ -49,6 +49,16 @@ void sampling(int ss_size, int a_size, int num_strings) {
     printf("| Entire Loop            | %18.6f |\n", elapsed_loop);
     printf("+------------------------+--------------------+\n");
 }
+
+// TODO
+// for alphabet sizes from 16 to 2^10
+// for sync string lengths from 16 to 2^10
+// we want to know if a valid sync string is possible given an alphabet, an alphabet size, and an epsilon. isPossible()
+
+// Reed Solomon Decoder
+// message (encode function runs)=> codeword => channel where errors are introduced (make an error making function)=> corrupted codeword => decoded message
+// write the full pipeline
+
 
 int main() {
     struct timespec start, end;
